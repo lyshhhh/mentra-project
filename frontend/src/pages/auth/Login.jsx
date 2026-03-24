@@ -18,7 +18,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const data = await apiRequest("api/auth/login", "POST", { email, password });
+      const data = await apiRequest("/auth/login", "POST", { email, password });
 
       // Save token + user in context
       login(data);
