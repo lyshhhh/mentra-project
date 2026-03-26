@@ -1,4 +1,4 @@
-const API_BASE ="https://mentra-backen.onrender.com";
+const API_BASE ="mentra-project-production.up.railway.app";
 
 export async function apiRequest(url, method = "GET", body) {
   const res = await fetch(API_BASE + url, {

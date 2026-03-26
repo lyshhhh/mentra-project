@@ -1,22 +1,24 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
 
-  useEffect(() => {
+  // ✅ Load user instantly (NO delay)
+  const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem("user");
-    if (savedUser) setUser(JSON.parse(savedUser));
-  }, []);
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+
+  const [loading, setLoading] = useState(false);
 
   const login = (data) => {
+    console.log("SETTING USER:", data);
     localStorage.setItem("token", data.token);
     localStorage.setItem("user", JSON.stringify(data.user));
     setUser(data.user);
   };
 
-  // ✅ Called after password is changed — updates flag in localStorage
   const markPasswordChanged = () => {
     const updatedUser = { ...user, password_changed: 1 };
     localStorage.setItem("user", JSON.stringify(updatedUser));
@@ -30,7 +32,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, markPasswordChanged }}>
+    <AuthContext.Provider value={{ user, login, logout, markPasswordChanged, loading }}>
       {children}
     </AuthContext.Provider>
   );
